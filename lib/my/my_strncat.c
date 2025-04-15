@@ -1,23 +1,20 @@
 /*
 ** EPITECH PROJECT, 2024
-** my_strncat.c
+** my_strcat
 ** File description:
-** zzz
+** function that concatenates two strings
 */
+
 #include "my.h"
 
 char *my_strncat(char *dest, char const *src, int nb)
 {
-    int i = 0;
-    int k = 0;
+    int i = my_strlen(dest);
+    int j;
 
-    k = my_strlen(dest);
-    if (nb <= 0) {
-        return dest;
+    for (j = 0; src[j] != '\0' && j < nb; j++) {
+        dest[i + j] = src[j];
     }
-    while (src[i] != '\0' && i < nb) {
-        dest[k + i] = src[i];
-        i += 1;
-    }
+    dest[i + j + 1] = '\0';
     return dest;
 }

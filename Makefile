@@ -1,109 +1,102 @@
 ##
 ## EPITECH PROJECT, 2025
-## Makefile
+## makefile
 ## File description:
-## Makefile
+## root makefile
 ##
 
-CC 	?=	gcc
+CC ?= gcc
 
-SRC	=	src/mysh.c						\
-		src/get_user_input.c			\
-		src/separators/is_semilicon.c	\
-		src/separators/is_pipe.c     	\
-		src/separators/is_one_left.c	\
-		src/separators/is_two_left.c	\
-		src/separators/is_one_right.c	\
-		src/separators/is_two_right.c	\
-		src/tree/create_tree_node.c		\
-		src/tree/create_tree.c     		\
-		src/tree/print_tree.c 			\
-		src/separators/get_sep.c		\
-		src/utils/get_priority_index.c	\
-		src/utils/cut_array.c         	\
-		src/utils/get_new_str_from_arr.c\
-		src/execute_command.c			\
-		src/path_of_command.c			\
-		src/buid_in/is_cd.c				\
-		src/buid_in/is_setenv.c			\
-		src/buid_in/is_unsetenv.c		\
-		src/buid_in/get_build.c 		\
-		src/utils/parse_array.c			\
-		src/change_directory.c			\
-		src/envirement/create_node.c	\
-		src/envirement/create_val.c		\
-		src/envirement/print_list.c		\
-		src/envirement/len_linked_list.c\
-		src/envirement/list_to_arr.c	\
-		src/envirement/add_env_to_list.c\
-		src/envirement/setenv_error.c	\
-		src/my_mulcat.c					\
-		src/my_char_not_in.c			\
-		src/envirement/change_env.c		\
-		src/envirement/setenv.c			\
-		src/buid_in/exec_buid_in.c		\
-		src/tree/exec_tree.c			\
-		src/utils/search_in_dir.c		\
-		src/tree/exec_func_tree.c		\
-		src/tree/pipe_func.c			\
-		src/tree/rec_exec_tree.c		\
-		src/sep_func/one_left_func.c	\
-		src/sep_func/two_left_func.c	\
-		src/sep_func/semilicon_func.c   \
-		src/tree/free_tree.c			\
-		src/buid_in/is_env.c			\
-		src/sep_func/one_right_func.c	\
-		src/sep_func/two_right_func.c	\
-		src/buid_in/is_exit.c
+PATH_UNI = ./tests/unitest/test_42sh.c
 
-OBJ     =   $(SRC:.c=.o)
+INCLUDE_DIR = include
 
-NAME    =	mysh
+MAIN = src/main.c
 
-LIB	=	make -C lib/my/
+SRC = 	$(addprefix src/, 					\
+		mysh.c								\
+		\
+		built-in/cd/do_cd.c					\
+		built-in/exit/do_exit.c				\
+		built-in/env/do_env.c				\
+		built-in/env/do_setenv.c			\
+		built-in/env/do_unsetenv.c			\
+		built-in/env/get_env_var.c			\
+		built-in/env/is_env_var.c			\
+		\
+		parsing/wich_path.c					\
+		parsing/make_tree.c					\
+		parsing/get_input.c					\
+		parsing/check_tree.c				\
+		parsing/format_cmd.c				\
+		parsing/wave.c 	                    \
+		\
+		operators/exec_rr_r.c				\
+		operators/error_branch.c			\
+		operators/exec_pipe.c				\
+		operators/exec_r.c					\
+		operators/exec_rr.c					\
+		operators/exec_l.c					\
+		operators/exec_ll.c					\
+		\
+		execution/do_existing_command.c		\
+		execution/exec_proper_function.c	\
+		execution/exec_command_no_fork.c	\
+		execution/exec_command.c			\
+		execution/exec_operator.c			)
 
-CPPFLAGS += -iquote./include -lcrypt
+OBJ = $(SRC:.c=.o) $(MAIN:.c=.o)
 
-CFLAGS += -Wall -Wextra
+TESTS = tests_run
 
-CPPFLAGS += -iquote include/
+CFLAGS = -Wall -Wextra
 
-VALGRIND = -g3
+CPPFLAGS = -iquote include
 
-all:	$(OBJ)
-	$(LIB)
-	$(CC)  -o $(NAME) $(SRC) -L lib/my/ -lmy $(CPPFLAGS) -g3
-	# clear
+LDFLAGS = -L lib/linked_list/ -L lib/my
 
-val:	$(OBJ)
-	$(LIB)
-	$(CC) -o $(NAME) $(VALGRIND) $(CFLAGS) $(SRC) -L lib/my/ -lmy $(CPPFLAGS)
+LDLIBS = -llinked_list -lmy
+
+NAME = mysh
+
+all:	$(NAME)
+
+$(NAME):	$(OBJ)
+	make -C lib/my/
+	make -C lib/linked_list/
+	$(CC) -o $(NAME) $(OBJ) $(LDLIBS) $(LDFLAGS)
+
+debug: CFLAGS += -g3
+debug: fclean $(OBJ)
+	make -C lib/my/ CFLAGS+=-g3
+	make -C lib/linked_list/ CFLAGS+=-g3
+	$(CC) -o $(NAME) $(OBJ) $(LDLIBS) $(LDFLAGS)
+
+$(TESTS): LDFLAGS += --coverage -lcriterion
+$(TESTS):
+	$(CC) -o $(TESTS) $(SRC) $(PATH_UNI) \
+		$(LDLIBS) $(CPPFLAGS) $(LDFLAGS)
+	./$(TESTS)
+
+uni_clean:
+	$(RM) $(TESTS)*
+
 clean:
-	make clean -C lib/my/
+	make -C lib/my/ clean
+	make -C lib/linked_list/ clean
 	$(RM) $(OBJ)
-	$(RM) coding-style*
-	$(RM) *~
-	$(RM) *#
-	$(RM) *.o
-	$(RM) src/setenv/*.o
-	$(RM) src/*.o
-	$(RM) src/*~
-	$(RM) src/#*
-	$(RM) include/*#
-	$(RM) include/*~
 
-fclean: clean
-	make fclean -C lib/my/
+fclean:	clean uni_clean
+	make -C lib/my/ fclean
+	make -C lib/linked_list/ fclean
 	$(RM) $(NAME)
-	$(RM) ./lib/my/libmy.a
-	$(RM) libmy.a
-	clear
 
-re:	fclean all
+re: fclean all
 
-t:
-	make
-	rm tester_2/mysh
-	cp mysh tester_2
+tests:
+	./tests/cmp.sh
 
-.PHONY: all clean fclean re
+tester: re
+	./tests/test.sh
+
+.PHONY: all debug clean fclean re tests tester uni_clean

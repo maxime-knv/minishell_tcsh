@@ -2,21 +2,16 @@
 ** EPITECH PROJECT, 2024
 ** my_isneg
 ** File description:
-** N if negative, P if positive
+** print N if n is negative, P if not
 */
 
-#include <unistd.h>
-#include <stdio.h>
 #include "my.h"
 
 void my_isneg(int n)
 {
-    char P = 80;
-    char N = 78;
-
-    if (n >= 0) {
-        my_putchar(P);
+    if (n < 0) {
+        my_putchar('N');
     } else {
-        my_putchar(N);
+        my_putchar('P');
     }
 }

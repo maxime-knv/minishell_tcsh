@@ -1,12 +1,16 @@
 /*
 ** EPITECH PROJECT, 2024
-** my_strupcase.c
+** my_strupcase
 ** File description:
-** zzz
+** put all of case in upper case
 */
-#include <stddef.h>
 
-char *my_strupcase(char *)
+char *my_strupcase(char *str)
 {
-    return NULL;
+    for (int i = 0; str[i] != '\0'; i++){
+        if (str[i] >= 'a' && str[i] <= 'z'){
+            str[i] = str[i] - 32;
+        }
+    }
+    return str;
 }

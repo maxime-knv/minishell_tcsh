@@ -1,38 +1,55 @@
 /*
 ** EPITECH PROJECT, 2024
-** mini_printf.c
+** mini_printf
 ** File description:
-** meow
+** presque printf
 */
 
+#include <unistd.h>
 #include <stdarg.h>
 #include "my.h"
 
-int special_cases(va_list args, const char *format, int i)
+static void get_flag(char c, va_list args, int *count)
 {
-    if (format[i + 1] == 'd' || format[i + 1] == 'i')
-        my_put_nbr(va_arg(args, int));
-    if (format[i + 1] == 'c')
+    int tmp = 0;
+
+    if (c == 'd' || c == 'i') {
+        tmp = va_arg(args, int);
+        *count += my_intlen(tmp);
+        my_put_nbr(tmp);
+    }
+    if (c == 's') {
+        *count += my_putstr(va_arg(args, char *));
+    }
+    if (c == 'c') {
+        (*count)++;
         my_putchar(va_arg(args, int));
-    if (format[i + 1] == 's')
-        my_putstr(va_arg(args, char *));
-    if (format[i + 1] == '%')
+    }
+    if (c == '%') {
         my_putchar('%');
-    return 0;
+        (*count)++;
+    }
 }
 
 int mini_printf(const char *format, ...)
 {
     va_list args;
+    int count = 0;
 
-    va_start(args, *format);
+    va_start(args, format);
     for (int i = 0; format[i] != '\0'; i++) {
+        if (format[i] == '%' && format[i + 1] != 'd' && format[i + 1] != 'i'
+        && format[i + 1] != 's' && format[i + 1] != 'c'
+        && format[i + 1] != '%')
+            return EPI_ERROR;
         if (format[i] == '%') {
-            special_cases(args, format, i);
-            i += 1;
-        } else
-            my_putchar(format[i]);
+            get_flag(format[i + 1], args, &count);
+            i++;
+            continue;
+        }
+        count++;
+        my_putchar(format[i]);
     }
     va_end(args);
-    return 0;
+    return count;
 }

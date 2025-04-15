@@ -1,11 +1,23 @@
 /*
 ** EPITECH PROJECT, 2024
-** my_str_islower.c
+** my_str_islower
 ** File description:
-** zzz
+** c
 */
 
-int my_str_islower(char const *)
+#include "my.h"
+
+int my_str_islower(char const *str)
 {
-    return 0;
+    int len = my_strlen(str);
+
+    if (len == 0) {
+        return 1;
+    }
+    for (int i = 0; i < len; i++) {
+        if (str[i] < 'a' || str[i] > 'z') {
+            return 0;
+        }
+    }
+    return 1;
 }

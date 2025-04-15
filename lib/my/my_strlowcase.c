@@ -1,13 +1,16 @@
 /*
 ** EPITECH PROJECT, 2024
-** my_strlowcase.c
+** my_strlowcase
 ** File description:
-** zzz
+** put all of the case in low case
 */
 
-#include <stddef.h>
-
-char *my_strlowcase(char *)
+char *my_strlowcase(char *str)
 {
-    return NULL;
+    for (int i = 0; str[i] != '\0'; i++){
+        if (str[i] >= 'A' && str[i] <= 'Z'){
+            str[i] = str[i] + 32;
+        }
+    }
+    return str;
 }

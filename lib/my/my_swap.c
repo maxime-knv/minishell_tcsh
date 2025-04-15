@@ -2,16 +2,16 @@
 ** EPITECH PROJECT, 2024
 ** my_swap
 ** File description:
-** swaps content of two integers
+** swap char a with char b
 */
-#include <stdio.h>
+
+#include "my.h"
 
 void my_swap(int *a, int *b)
 {
-    int c;
-    int *ptrc = &c;
+    int temp;
 
-    *ptrc = *a;
+    temp = *a;
     *a = *b;
-    *b = *ptrc;
+    *b = temp;
 }

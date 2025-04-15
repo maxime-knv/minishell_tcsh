@@ -1,20 +1,25 @@
 /*
 ** EPITECH PROJECT, 2024
-** my_strdup.c
+** my_strdup
 ** File description:
-** task 01 day 08
+** dup a string
 */
 
-#include "my.h"
 #include <stdlib.h>
+#include "my.h"
 
 char *my_strdup(char const *src)
 {
-    char *dest;
-    int i = 0;
+    int len = my_strlen(src);
+    char *dup = NULL;
 
-    i = my_strlen(src);
-    dest = malloc(sizeof(char) * (i + 1));
-    my_strcpy(dest, src);
-    return dest;
+    if (src == NULL)
+        return NULL;
+    dup = malloc(len + 1);
+    if (dup == NULL)
+        return NULL;
+    for (int i = 0; src[i] != '\0'; i++)
+        dup[i] = src[i];
+    dup[len] = '\0';
+    return dup;
 }
